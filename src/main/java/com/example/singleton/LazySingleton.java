@@ -34,12 +34,14 @@ public class LazySingleton {
         return instance;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (int i = 0; i < 10; i++) {
-            executorService.execute(LazySingleton::getInstance);
+            executorService.execute(() -> {
+                LazySingleton instance = LazySingleton.getInstance();
+                log.info("instance: " + instance);
+            });
         }
         executorService.shutdown();
-        executorService.awaitTermination(100, TimeUnit.MINUTES);
     }
 }
